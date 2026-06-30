@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /home/henry/Downloads/AI in action/day24/Day24-Track02-Lab-Assignment/medviet-governance/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/henry/Downloads/AI in action/day24/Day24-Track02-Lab-Assignment/medviet-governance
+plugins: anyio-4.14.1, Faker-40.23.0
+collecting ... collected 6 items
+
+tests/test_pii.py::TestPIIDetection::test_cccd_detected PASSED           [ 16%]
+tests/test_pii.py::TestPIIDetection::test_phone_detected PASSED          [ 33%]
+tests/test_pii.py::TestPIIDetection::test_email_detected PASSED          [ 50%]
+tests/test_pii.py::TestPIIDetection::test_detection_rate_above_95_percent PASSED [ 66%]
+tests/test_pii.py::TestAnonymization::test_pii_not_in_output PASSED      [ 83%]
+tests/test_pii.py::TestAnonymization::test_non_pii_columns_unchanged PASSED [100%]
+
+=============================== warnings summary ===============================
+tests/test_pii.py::TestPIIDetection::test_cccd_detected
+tests/test_pii.py::TestPIIDetection::test_phone_detected
+tests/test_pii.py::TestPIIDetection::test_email_detected
+tests/test_pii.py::TestPIIDetection::test_detection_rate_above_95_percent
+tests/test_pii.py::TestAnonymization::test_pii_not_in_output
+tests/test_pii.py::TestAnonymization::test_non_pii_columns_unchanged
+  /home/henry/Downloads/AI in action/day24/Day24-Track02-Lab-Assignment/medviet-governance/.venv/lib/python3.12/site-packages/spacy/util.py:971: UserWarning: [W095] Model 'vi_core_news_lg' (3.6.0) was trained with spaCy v3.6.0 and may not be 100% compatible with the current version (3.8.13). If you see errors or degraded performance, download a newer compatible model or retrain your custom model with the current spaCy version. For more details and available updates, run: python -m spacy validate
+    warnings.warn(warn_msg)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 6 passed, 6 warnings in 12.40s ========================

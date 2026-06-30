@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.vault_key
+.great_expectations/
+data/raw/
+test_secret.py

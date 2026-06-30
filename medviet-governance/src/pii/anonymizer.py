@@ -1,4 +1,5 @@
 # src/pii/anonymizer.py
+import hashlib
 import pandas as pd
 from presidio_anonymizer import AnonymizerEngine
 from presidio_anonymizer.entities import OperatorConfig
@@ -34,19 +35,25 @@ class MedVietAnonymizer:
             operators = {
                 "PERSON": OperatorConfig("replace", 
                           {"new_value": fake.name()}),
-                "EMAIL_ADDRESS": OperatorConfig("replace", 
-                                 {"new_value": ___}),   # TODO: fake email
-                "VN_CCCD": OperatorConfig("replace", 
-                           {"new_value": ___}),          # TODO: fake CCCD
-                "VN_PHONE": OperatorConfig("replace", 
-                            {"new_value": ___}),         # TODO: fake phone
+                "EMAIL_ADDRESS": OperatorConfig("replace",
+                                 {"new_value": fake.email()}),
+                "VN_CCCD": OperatorConfig("replace",
+                           {"new_value": fake.numerify("############")}),
+                "VN_PHONE": OperatorConfig("replace",
+                            {"new_value": "0" + fake.random_element(["3","5","7","8","9"]) + fake.numerify("########")}),
             }
         elif strategy == "mask":
-            # TODO: implement masking
-            pass
+            operators = {
+                "DEFAULT": OperatorConfig("custom", {
+                    "lambda": lambda x: x[0] + "*" * (len(x) - 1) if len(x) > 1 else x
+                })
+            }
         elif strategy == "hash":
-            # TODO: implement hashing dùng sha256
-            pass
+            operators = {
+                "DEFAULT": OperatorConfig("custom", {
+                    "lambda": lambda x: hashlib.sha256(x.encode()).hexdigest()
+                })
+            }
 
         anonymized = self.anonymizer.anonymize(
             text=text,
@@ -65,8 +72,22 @@ class MedVietAnonymizer:
         """
         df_anon = df.copy()
 
-        # TODO: Xử lý từng cột PII
-        # Gợi ý: dùng df.apply() hoặc list comprehension
+        # Cột text: chạy qua anonymize_text để detect + replace
+        for col in ["ho_ten", "dia_chi", "email"]:
+            if col in df_anon.columns:
+                df_anon[col] = df_anon[col].astype(str).apply(self.anonymize_text)
+
+        # Cột structured PII: replace trực tiếp bằng fake data
+        if "cccd" in df_anon.columns:
+            df_anon["cccd"] = [fake.numerify("############") for _ in range(len(df_anon))]
+
+        if "so_dien_thoai" in df_anon.columns:
+            df_anon["so_dien_thoai"] = [
+                "0" + fake.random_element(["3", "5", "7", "8", "9"]) + fake.numerify("########")
+                for _ in range(len(df_anon))
+            ]
+
+        # benh, ket_qua_xet_nghiem, patient_id: giữ nguyên
 
         return df_anon
 
